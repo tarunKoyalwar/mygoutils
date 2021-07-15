@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
+	"sync"
 )
 
 // A commadData is struct to return data
@@ -47,7 +48,7 @@ func RuncmdAdv(ptr *exec.Cmd) *CommandData {
 // Additional options such as stderr , current directory etc
 // It takes CMD struct as input
 // useful for goroutines
-func GorunAdvcmd(ptr *exec.Cmd, ch chan<- CommandData) {
+func GorunAdvcmd(ptr *exec.Cmd, ch chan<- CommandData, wg *sync.WaitGroup) {
 	var out bytes.Buffer
 
 	ptr.Stdout = &out
@@ -63,6 +64,8 @@ func GorunAdvcmd(ptr *exec.Cmd, ch chan<- CommandData) {
 	}
 
 	ch <- datax
+
+	wg.Done()
 
 }
 
@@ -90,7 +93,7 @@ func Runcmd(cmdname string, args ...string) *CommandData {
 
 // A simple function to run command and return its data
 // takes cmdname and arguments
-func GorunCmd(ch chan<- CommandData, cmdname string, args ...string) {
+func GorunCmd(ch chan<- CommandData, wg *sync.WaitGroup, cmdname string, args ...string) {
 	cmdpath := CheckPath(cmdname)
 	var out bytes.Buffer
 
@@ -109,5 +112,7 @@ func GorunCmd(ch chan<- CommandData, cmdname string, args ...string) {
 	}
 
 	ch <- datax
+
+	wg.Done()
 
 }
