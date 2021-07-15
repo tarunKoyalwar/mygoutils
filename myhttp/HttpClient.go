@@ -1,6 +1,6 @@
 //This program consists of wrapper to efficiently create
 // A HTTP client with simple and lame terms rather than RFC standard names
-package http
+package myhttp
 
 import (
 	"crypto/tls"

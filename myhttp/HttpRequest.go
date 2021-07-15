@@ -27,7 +27,7 @@
 
 // csrf=MBw8zEPAnPLXok64Fn9QzX4UPRY0Igpc
 
-package http
+package myhttp
 
 import (
 	"bytes"
