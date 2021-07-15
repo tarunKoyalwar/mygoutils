@@ -65,7 +65,7 @@ func GorunAdvcmd(ptr *exec.Cmd, ch chan<- CommandData, wg *sync.WaitGroup) {
 
 	ch <- datax
 
-	wg.Done()
+	defer wg.Done()
 
 }
 
@@ -113,6 +113,6 @@ func GorunCmd(ch chan<- CommandData, wg *sync.WaitGroup, cmdname string, args ..
 
 	ch <- datax
 
-	wg.Done()
+	defer wg.Done()
 
 }
