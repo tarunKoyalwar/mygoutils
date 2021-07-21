@@ -63,7 +63,8 @@ type Raw_request struct {
 var ForbiddenHeaders string = " Connection Content-Length Transfer-Encoding Trailer "
 
 // This is internal function to seperate request headers and body
-func getreqandbody(testx []byte) *[][]byte {
+func getreqandbody(testx1 []byte) *[][]byte {
+	testx := bytes.TrimSpace(testx1)
 	sep1 := []byte{13, 10, 13, 10}
 	sep := []byte{10, 10}
 	res1 := bytes.SplitN(testx, sep1, 2)
