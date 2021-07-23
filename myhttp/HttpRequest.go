@@ -51,7 +51,7 @@ type Raw_request struct {
 	Verb         string            // HTTP verb
 	URI          string            // This is relative path
 	baseuri      *url.URL          // This is base uri constructed from host header
-	cookies      *[]http.Cookie    // This contains cookies
+	Cookies      *[]http.Cookie    // This contains cookies
 	UserAgent    string            // User Agent of request
 	Headers      map[string]string // A map with headers and its values forbidden headers are omitted
 	Body         []byte            // Byte array of the body
@@ -91,7 +91,7 @@ func getCookiesfromLine(line string, raw *Raw_request) {
 			Value: value,
 		})
 	}
-	raw.cookies = &cookiekv
+	raw.Cookies = &cookiekv
 }
 
 // A simple function to Dump Request using httputil
@@ -135,7 +135,7 @@ func DeserializeRequest(z Raw_request) *http.Request {
 
 	//set Cookies
 	if z.CookieSwitch {
-		for _, v := range *z.cookies {
+		for _, v := range *z.Cookies {
 			request.AddCookie(&v)
 		}
 	}
