@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
 )
 
@@ -69,9 +70,37 @@ func GorunAdvcmd(ptr *exec.Cmd, ch chan<- CommandData, wg *sync.WaitGroup) {
 
 }
 
+func RuncmdInDir(command string, DIR string) *CommandData {
+	tdata := strings.Split(command, " ")
+	cmdpath := CheckPath(tdata[0])
+	args := []string{cmdpath}
+	args = append(args, tdata[1:]...)
+	var out bytes.Buffer
+
+	cmd := exec.Cmd{
+		Path: cmdpath,
+		Args: args,
+		Dir:  DIR,
+	}
+
+	cmd.Stdout = &out
+	err := cmd.Run()
+
+	HandleError(err, "Command Failed to start => "+tdata[0]+" "+cmdpath)
+
+	return &CommandData{
+		Stdout:  out.Bytes(),
+		Name:    tdata[0],
+		Process: cmd.Process,
+	}
+}
+
 // A simple function to run command and return its data
 // takes cmdname and arguments
-func Runcmd(cmdname string, args ...string) *CommandData {
+func Runcmd(command string) *CommandData {
+	tdata := strings.Split(command, " ")
+	cmdname := tdata[0]
+	args := tdata[1:]
 	cmdpath := CheckPath(cmdname)
 	var out bytes.Buffer
 

@@ -60,7 +60,13 @@ type Raw_request struct {
 }
 
 // This methods are not implemented and are automatically handled by golang
-var ForbiddenHeaders string = " Connection Content-Length Transfer-Encoding Trailer "
+var ForbiddenHeaders map[string]bool = map[string]bool{
+	"connection":        true,
+	"content-length":    true,
+	"transfer-encoding": true,
+	"trailer":           true,
+	"accept-encoding":   true,
+}
 
 // This is internal function to seperate request headers and body
 func getreqandbody(testx1 []byte) *[][]byte {
@@ -190,7 +196,7 @@ func BytestoStruct(reqdata *[]byte, urlx string) *Raw_request {
 		} else if strings.Contains(line[0], "User-Agent") {
 			z.UserAgent = line[1]
 			continue
-		} else if strings.Contains(ForbiddenHeaders, line[0]) {
+		} else if ForbiddenHeaders[strings.ToLower(strings.TrimSpace(line[0]))] {
 			continue
 		} else {
 			headerx[line[0]] = line[1]

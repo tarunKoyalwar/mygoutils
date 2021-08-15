@@ -23,6 +23,15 @@ type CustomHttpClient struct {
 	ProxyUrl              string // Proxy URL ex http://127.0.0.1:8080
 }
 
+var t CustomHttpClient = CustomHttpClient{
+	ValidateCertificate:   false,
+	FollowRedirect:        false,
+	NewConForEveryRequest: false,
+	Timeout:               30,
+}
+
+var DefaultClient *http.Client = t.Create()
+
 //This is just a function to create appropriate client based
 // on the customhttpclient parameters
 //This returns a *http.client instance
